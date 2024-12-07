@@ -17,7 +17,8 @@ start_time = time.time()
 # Define the number of patients
 #num_patients = 10
 def get_treatment_and_dose(bioEffDose, numRT, param, numPD, numCTLA4):
-  RTschedule_list = get_treatment_schedules(numRT, 10)
+  #RTschedule_list = get_treatment_schedules(numRT, 10)
+  RTschedule_list = [[10,11,12,13,14]]
   if numPD > 0:
     PDschedule_list = get_treatment_schedules(numPD, 10)
   else:
@@ -32,7 +33,8 @@ def get_treatment_and_dose(bioEffDose, numRT, param, numPD, numCTLA4):
         for z in CTLA4schedule_list:
             schedule.append([x, y, z])
   DList = []
-  D = get_equivalent_bed_treatment(param, bioEffDose, numRT)
+  D = [2,2,2,2,2]
+  #D = get_equivalent_bed_treatment(param, bioEffDose, numRT)
   for i in range(len(schedule)):
     DList.append(D)
   return schedule, DList
@@ -61,12 +63,12 @@ delta_t = 0.05
 # t_treat_p1 = np.zeros(3)
 c4 = 0
 p1 = 0
-PD_fractions = 1
+PD_fractions = 2
 CTLA4_fractions = 2
          #print('errors', errorMerged)
 all_res_list = []
 IT = (True, True)
-RT_fractions = 1
+RT_fractions = 5
 param = [0, 0, 0.15769230769230763, 0.04269230769230769]
 # param[26] = 0.13795567390561228
 # param[27] = 0.4073542114448485
@@ -74,7 +76,7 @@ param = [0, 0, 0.15769230769230763, 0.04269230769230769]
 # param[33] = 0.0897670603865841
 # param.append(2.2458318956090505*10**80)
 bed = 80
-file_name = 'smaller sampling range hypoxia RT ' + str(RT_fractions) + ' PD ' + str(PD_fractions) + ' CTLA4 ' + str(CTLA4_fractions) + ' v.csv'
+file_name = 'smaller sampling range hypoxia RT ' + str(RT_fractions) + ' PD ' + str(PD_fractions) + ' CTLA4 ' + str(CTLA4_fractions) + ' a.csv'
 schedule_list, DList = get_treatment_and_dose(bed, RT_fractions, param, PD_fractions, CTLA4_fractions)
 #print('Dlist', DList)
 print(schedule_list)
@@ -139,7 +141,7 @@ def trial_treatment(i, file):
   #print('trial t_f2', t_f2)
   treatment_times = []
   treatment_times_list = []
-  D = DList[i]
+  D = [2,2,2,2,2]
   args = [(j, t_rad, t_treat_p1, t_treat_c4, D) for j in range(sample_size)]
   #print('args', args)
   res_list = []
@@ -164,7 +166,7 @@ iterations = len(schedule_list)  # Or any other number of iterations
 # for k in range(min(iterations,50)):
 #     print('k', k)
 #     print(params[k])
-args = [(k, params) for k in range(12600, min(iterations,13200))]
+args = [(k, params) for k in range(min(iterations, 600))]
 # Use a ThreadPoolExecutor to run the iterations in parallel
 with concurrent.futures.ThreadPoolExecutor() as executor:
     data = list(executor.map(lambda p: trial_treatment(*p), args))
